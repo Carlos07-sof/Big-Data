@@ -1,7 +1,5 @@
 import folium
-
 import pandas as pd
-
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Image, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
@@ -16,12 +14,13 @@ df = df.drop("ADDRESS2", axis=1)
 
 df = df[(df['CITY'] == 'Brooklyn')]
 
-
 df = df.sort_values(by='GRADING', ascending=False)
 
 tres_calificados = df.head(3)
 
 print(tres_calificados)
+
+#GENERAR MAPA
 
 m = folium.Map(location=[40.7037979,-74.0202391], zoom_start=13)
 
@@ -48,14 +47,11 @@ doc = SimpleDocTemplate("informe_final.pdf", pagesize=letter)
 styles = getSampleStyleSheet()
 contenido = []
 
-
-# Agregar el título como un párrafo de texto
 titulo = "The best Galleries and Museums\n"
 contenido.append(Paragraph(titulo, styles["Title"]))
 
 imagen_mapa = Image("temp_map.png", width=500, height=400)
 contenido.append(imagen_mapa)
-
 
 for index, row in tres_calificados.iterrows():
     name = row['NAME']
@@ -68,6 +64,5 @@ for index, row in tres_calificados.iterrows():
 
 # Construir el informe y guardarlo en un archivo PDF
 doc.build(contenido)
-
 
 df.to_csv('NewFormat.csv', index=False)
